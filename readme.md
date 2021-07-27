@@ -1,5 +1,11 @@
 # Agile rails 6 shoppping cart depot
 
+```
+GEMS USED
+gem 'bcrypt', '~> 3.1.7'
+gem 'i18n-js'
+```
+
 - ajax the shopping cart
 - action cable to update prices without refreshing the page (had to make it in {formatting} to work in ruby 3, I was getting an error)
 - added atom feed (like rss) for the orders
@@ -39,6 +45,13 @@ database.
 <hr>
 
 # Webcrunch - demo blog
+
+```
+GEMS USED
+gem 'better_errors'
+gem 'bulma-rails'
+gem 'simple_form'
+```
 
 - posts
 - with nested comments dependent destroy
