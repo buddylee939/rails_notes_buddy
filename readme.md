@@ -1,6 +1,5 @@
 # Agile rails 6 shoppping cart depot
 
-- 
 - ajax the shopping cart
 - action cable to update prices without refreshing the page (had to make it in {formatting} to work in ruby 3, I was getting an error)
 - added atom feed (like rss) for the orders
