@@ -43,3 +43,34 @@ database.
 - posts
 - with nested comments dependent destroy
 - bulma css
+
+<hr>
+
+# Webcrunch - twitter
+
+```
+GEMS USED
+gem 'bulma-rails'
+gem 'simple_form'
+gem 'gravatar_image_tag'
+gem 'devise'
+gem 'better_errors'
+```
+
+- tweeets model
+- users with devise
+- added fields to devise, name username and uniqueness column
+- rails g migration add_fields_to_users name username:uniq  
+- tweets build from current user
+- devise permitted
+
+```
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :username])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :username])
+```
+
+- styled devise forms with bulma
+- used font awesome cdn
+- user has gravatar image
+
+<hr>
