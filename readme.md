@@ -78,8 +78,15 @@ gem 'better_errors'
 - devise permitted
 
 ```
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :username])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :username])
+ before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:name])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+  end	
 ```
 
 - styled devise forms with bulma
@@ -87,3 +94,84 @@ gem 'better_errors'
 - user has gravatar image
 
 <hr>
+
+# Webcrunch - dribble clone
+
+```
+GEMS USED
+group :development do
+  gem 'better_errors', '~> 2.4'
+  gem 'guard', '~> 2.14', '>= 2.14.1'
+  gem 'guard-livereload', '~> 2.5', '>= 2.5.2', require: false
+end
+
+# gem 'carrierwave', '~> 1.2', '>= 1.2.1'
+# gem "mini_magick"
+gem 'impressionist'
+gem "bulma-rails"
+gem 'devise'
+gem 'simple_form'
+gem 'jquery-rails'
+gem 'gravatar_image_tag'
+gem 'acts_as_votable'
+
+```
+
+- devise added name
+- devise forms with bulma
+- Shots model
+- comments Model
+- shot id and user it to comments
+- impressionist gem: rails g impressionist, rails db:migrate
+- acts as votable: rails generate acts_as_votable:migration/rails db:migrate
+
+```
+adding js to specific pages
+in the specific page
+<h1 class='text-center'>I want my JS here only</h1>
+
+<%= javascript_pack_tag 'hi' %>
+
+create app/javascript/packs/hi.js
+document.addEventListener("turbolinks:load", function() {
+	console.log('in hi.js')
+});
+
+
+adding js file to everything
+create the file all.js
+document.addEventListener("turbolinks:load", function() {
+	console.log('in all.js')
+});
+
+add to the packs/app.js file
+import './all'
+```
+
+- added jquery rails to rails 6
+- https://www.botreetechnologies.com/blog/introducing-jquery-in-rails-6-using-webpacker/
+- added a verbose date helper
+```
+	def verbose_date(date)
+		date.strftime('%B %d %Y')
+	end
+```
+
+- added font awesome
+- he used carrierwave cuz its rails 5, 
+- im using active storage
+- https://pragmaticstudio.com/tutorials/using-active-storage-in-rails
+
+- gravatar image tag: 
+
+```
+<%= gravatar_image_tag(@shot.user.email, size: 20, alt: @shot.user.name, style: 'max-width: 40px') %>
+```
+
+- comments form in the shots
+- acts as votable likes and unlike
+- impressions to see how many viewers per page, a view count
+- a hero banner based on whether the user is signed in or not
+- I got the drop zone and preview to work, but the bulma css was messing it up, if im not using bulma, i dont have to trouble shoot it
+- also the preview didnt work if i click on the box instead of drag and drop
+- online suggests a plugin called: dropzone.js
