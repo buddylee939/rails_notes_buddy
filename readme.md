@@ -175,3 +175,8 @@ import './all'
 - I got the drop zone and preview to work, but the bulma css was messing it up, if im not using bulma, i dont have to trouble shoot it
 - also the preview didnt work if i click on the box instead of drag and drop
 - online suggests a plugin called: dropzone.js
+
+<hr>
+
+# Webcrunch - discussion forum
+
