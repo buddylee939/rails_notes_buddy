@@ -354,3 +354,150 @@ user.rb
   </small>
 ```
 
+# Webcrunch - flanger
+
+```
+GEMS USED
+gem 'bulma-rails', '~> 0.6.1'
+gem 'simple_form', '~> 5.0'
+gem 'devise', '~> 4.7'
+gem 'gravatar_image_tag', '~> 1.2'
+# gem 'carrierwave'
+# gem 'mini_magick'
+
+```
+
+- added precision to price
+
+```
+t.decimal :price, precision: 5, scale: 2, default: 0
+```
+
+- generating without stylesheet or javascript
+
+```
+$ rails g scaffold Instrument brand:string model:string description:text condition:string finish:string title:string price:decimal --no-stylesheets --no-javascripts
+
+rails g scaffold Cart --no-stylesheets --no-javascripts
+```
+
+- added instrument images
+- bulma functions
+- added a shopping cart
+- no payment option though
+- used active storage
+- https://pragmaticstudio.com/tutorials/using-active-storage-in-rails
+
+- shopping cart icon with a count
+- application helpers
+- instrument helper to check if the user who created it is the same as the current user
+
+```
+  def instrument_author(instrument)
+    user_signed_in? && current_user.id == instrument.user_id
+  end
+
+```
+
+- used javascript to fade out the notifications
+
+```
+document.addEventListener("turbolinks:load", function() {
+
+  var notification = document.querySelector('.global-notification');
+
+  if(notification) {
+    window.setTimeout(function() {
+      notification.style.display = "none";
+    }, 4000);
+  }
+
+});
+```
+
+- added an image preview when uploading
+- created a models/concern/current_cart.rb
+
+```
+module CurrentCart
+
+  private
+
+  def set_cart
+    @cart = Cart.find(session[:cart_id])
+  rescue ActiveRecord::RecordNotFound
+    @cart = Cart.create
+    session[:cart_id] = @cart.id
+  end
+end
+```
+
+- belongs to user optional
+
+```
+  belongs_to :user, optional: true
+```
+
+- used variables in the models
+
+```
+  BRAND = %w{ Fender Gibson Epiphone ESP Martin Dean Taylor Jackson PRS  Ibanez Charvel Washburn }
+  FINISH = %w{ Black White Navy Blue Red Clear Satin Yellow Seafoam }
+  CONDITION = %w{ New Excellent Mint Used Fair Poor }
+
+```
+
+- simple form collections
+
+```
+        <div class="columns">
+          <div class="field column is-4">
+            <div class="control">
+              <label class="label">Brand</label>
+              <div class="control has-icons-left">
+                <span class="select">
+                  <%= f.input_field :brand, collection: Instrument::BRAND, prompt: "Select brand" %>
+                </span>
+                <span class="icon is-small is-left">
+                  <i class="fa fa-tag"></i>
+                </span>
+              </div>
+            </div>
+           </div>
+
+          <div class="field column is-4">
+            <div class="control">
+              <label class="label">Finish</label>
+              <div class="control has-icons-left">
+                <span class="select">
+                  <%= f.input_field :finish, collection: Instrument::FINISH, prompt: "Select finish" %>
+                </span>
+                <span class="icon is-small is-left">
+                  <i class="fa fa-paint-brush"></i>
+                </span>
+              </div>
+            </div>
+           </div>
+
+          <div class="field column is-4">
+            <div class="control">
+              <label class="label">Condition</label>
+              <div class="control has-icons-left">
+                <span class="select">
+                  <%= f.input_field :condition, collection: Instrument::CONDITION, prompt: "Select condition" %>
+                </span>
+                <span class="icon is-small is-left">
+                  <i class="fa fa-paint-brush"></i>
+                </span>
+              </div>
+            </div>
+           </div>
+         </div>
+
+
+```
+
+- bulma devise forms
+- used font awesomes
+
+<hr>
