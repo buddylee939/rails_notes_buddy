@@ -78,6 +78,7 @@ gem 'better_errors'
 - devise permitted
 
 ```
+in application controller
  before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
@@ -179,4 +180,177 @@ import './all'
 <hr>
 
 # Webcrunch - discussion forum
+
+```
+GEMS USED
+gem 'bulma-rails'
+gem 'simple_form'
+gem 'devise'
+gem 'gravatar_image_tag'
+gem 'jquery-rails'
+gem 'rolify'
+gem 'cancancan'
+gem 'friendly_id'
+gem 'redcarpet'
+gem 'coderay'
+
+```
+
+- yarn install jquery
+- https://www.botreetechnologies.com/blog/introducing-jquery-in-rails-6-using-webpacker/
+- devise added username
+- custom bulma functions
+- added roles with rolify and cancancan
+- searched discussions where channel id equals the current show
+
+```
+  def show
+    @discussions = Discussion.where('channel_id = ?', @channel.id)
+    @channels = Channel.all
+  end
+```
+
+- discussions build from current user
+
+```
+  def new
+    @discussion = current_user.discussions.build
+  end
+  def create
+    @discussion = current_user.discussions.build(discussion_params)
+
+```
+
+- the replies in the discussions are done via js without refresh ajax
+
+```
+  def create
+    @reply = @discussion.replies.create(params[:reply].permit(:reply, :discussion_id))
+    @reply.user_id = current_user.id
+
+    respond_to do |format|
+      if @reply.save
+        format.html { redirect_to discussion_path(@discussion) }
+        format.js # renders create.js.erb
+      else
+        format.html { redirect_to discussion_path(@discussion), notice: "Reply did not save. Please try again."}
+        format.js
+      end
+    end
+  end
+$("<%= escape_javascript(render(@reply)) %>").appendTo('#discussion-replies');
+// clears out the textarea
+$("#reply_reply").val(''); 
+
+```
+
+- used redcarpet and coderay to add markdown
+- used different helpers for the roles
+
+```
+in application helper
+  def has_role?(role)
+    current_user && current_user.has_role?(role)
+  end
+
+in discussions helper
+  def discussion_author(discussion)
+    user_signed_in? && current_user.id == discussion.user_id
+  end
+
+  def reply_author(reply)
+    user_signed_in? && current_user.id == reply.user_id
+  end
+```
+
+- cancancan ability.rb
+
+```
+class Ability
+  include CanCan::Ability
+
+  def initialize(user)
+      user ||= User.new # guest user (not logged in)
+      if user.has_role? :admin
+        can :manage, :all
+      else
+        can :read, :all
+      end
+
+  end
+end
+```
+
+- friendly id, changing id if file changes
+
+```
+in channel.rb
+  def should_generate_new_friendly_id?
+    channel_changed?
+  end
+```
+
+- rolify: role.rb
+
+```
+class Role < ApplicationRecord
+  has_and_belongs_to_many :users, :join_table => :users_roles
+
+
+  belongs_to :resource,
+             :polymorphic => true,
+             :optional => true
+
+
+  validates :resource_type,
+            :inclusion => { :in => Rolify.resource_types },
+            :allow_nil => true
+
+  scopify
+end
+```
+
+- users has many through
+
+```
+user.rb
+  has_many :discussions, dependent: :destroy
+  has_many :channels, through: :discussions
+
+```
+
+- used gravatar images
+
+```
+<%= gravatar_image_tag(reply.user.email, class: 'border-radius-50', size: 48, alt: reply.user.username) %>
+
+```
+
+- devise bulma styling
+- channel select dropdown with simple form, used a collection
+
+```
+  <div class="field">
+    <label class="label">Channel</label>
+    <div class="control has-icons-left">
+      <span class="select">
+        <%= f.input_field :channel_id, collection:@channels.map { |c| [c.channel, c.id] }, prompt: "Select channel" %>
+      </span>
+      <span class="icon is-small is-left">
+        <i class="fa fa-tag"></i>
+      </span>
+    </div>
+  </div>
+```
+
+- used a time ago in words
+
+```
+<p><em><small>Posted <%= time_ago_in_words(discussion.created_at) %> ago in
+  <% if discussion.channel %>
+    <%= link_to discussion.channel.channel, discussion.channel %>
+  <% end %>
+  by <%= discussion.user.username %>
+  </small>
+```
 
