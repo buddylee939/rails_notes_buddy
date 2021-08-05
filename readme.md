@@ -1,4 +1,4 @@
-# Agile rails 6 shoppping cart depot
+# Book Agile rails 6 shoppping cart depot
 
 ```
 GEMS USED
@@ -39,6 +39,19 @@ b. http://sidekiq.org/
 c. https://redis.io/
 d. https://github.com/QueueClassic/queue_classic/tree/3-1-stable
 database.
+
+```
+
+<hr>
+
+# Book - take my money
+
+- used monetize for the price column, with money_rails gem
+
+```
+rails generate model ticket \
+  user:references performance:references \
+  status:integer access:integer price:monetize
 
 ```
 
@@ -501,3 +514,150 @@ end
 - used font awesomes
 
 <hr>
+
+# Webcrunch - job board with stripe
+
+```
+GEMS USED
+gem 'devise'
+gem 'bulma-rails'
+gem 'simple_form'
+gem 'gravatar_image_tag', github: 'mdeering/gravatar_image_tag'
+gem 'sidekiq'
+# gem 'carrierwave', '~> 1.0'
+# gem 'mini_magick', '~> 4.8'
+gem 'stripe'
+# gem 'trix', '~> 0.11.1'
+# gem "figaro"
+```
+
+- added the app name in the config/application.rb file
+
+```
+module WebcrunchJobBoard
+  class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 6.1
+    config.application_name = 'Job Board'
+
+```
+
+- used the editor to edit credentials and rails console to see that it worked
+
+```
+EDITOR="subl -w" rails credentials:edit
+
+rails c
+Rails.application.credentials.config[:stripe_publishable_key]
+```
+
+<hr>
+
+# ABC Course - book review - in master-all-tutorials
+
+```
+GEMS USED
+gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
+gem 'simple_form', '~> 3.5'
+gem 'devise', '~> 4.3'
+
+```
+
+- books build by user
+
+```
+    @book = current_user.books.build(book_params)
+```
+
+- categories mapped, 
+
+```
+  def edit
+    @categories = Category.all.map{ |c| [c.name, c.id] }    
+  end
+
+  <% if current_page?(new_book_path) %>
+    <%= select_tag(:category_id, options_for_select(@categories), :prompt => "Select a category") %>
+  <% else %>
+    <%= f.select :category_id, @categories %>
+  <% end %>
+
+```
+
+- select tag with options
+
+```
+    <%= select_tag "credit_card", options_for_select([ "VISA", "MasterCard" ], "VISA") %>  
+
+```
+
+- bootstrap navbar
+
+<hr>
+
+# ABC Course - listings - in master-all-tutorials
+
+- validation
+
+```
+  validates :title, presence: true
+  validates :description, presence: true
+
+```
+
+- select tag right in the form
+
+```
+  <div class="form-group">
+    <%= f.label :category %>
+    <%= f.collection_select :category_id, Category.all, :id, :name, { include_blank: "Please select..."}, { class: 'form-control' } %>
+  </div>
+
+```
+
+- # ABC Course - photogram - in master-all-tutorials
+
+```
+GEMS USED - i didn't, only simple and devise
+gem 'haml', '~> 5.0', '>= 5.0.1'
+gem 'paperclip', '~> 5.1'
+gem 'simple_form', '~> 3.5'
+gem 'bootstrap-sass', '~> 3.3', '>= 3.3.7'
+gem 'devise', '~> 4.3'
+gem 'html2haml', '~> 2.2'
+```
+
+- i did active storage
+- https://pragmaticstudio.com/tutorials/using-active-storage-in-rails
+- added image processing gem and imagemagick
+- created a thumbnail variant with imagemagic
+
+```
+  def thumbnail
+    return self.main_image.variant(resize: '100x100')
+  end  
+
+in view
+      <%= link_to (image_tag post.thumbnail, class:'img-responsive'), post_path(post) if post.main_image.attached? %>  
+
+```
+- added bootstrap 4
+- added jquery
+- added images to posts with active storage
+- added comments with javascript no page refresh
+- added ability to delete comments with javascript no page refresh
+- bootstrap alert helper in application helper
+
+```
+module ApplicationHelper
+  def alert_for(flash_type)  
+    { success: 'alert-success',
+      error: 'alert-danger',
+      alert: 'alert-warning',
+      notice: 'alert-info'
+    }[flash_type.to_sym] || flash_type.to_s
+  end   
+end
+```
+<hr>
+
